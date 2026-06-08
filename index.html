@@ -147,8 +147,9 @@
       <div class="result-score" id="result-score"></div>
       <div class="result-msg" id="result-msg"></div>
       <div class="result-list" id="result-detail"></div>
+      <button class="btn btn-primary" style="margin-bottom:8px;" onclick="retryWrong()" id="retry-wrong-btn">まちがえた問題だけもう一度 →</button>
       <div class="action-row">
-        <button class="btn btn-primary" onclick="restartQuiz()">もう一度 →</button>
+        <button class="btn" onclick="restartQuiz()">全問もう一度</button>
         <button class="btn" onclick="goHome()">トップへ</button>
       </div>
     </div>
@@ -371,6 +372,11 @@ function nextQuestion() {
 
 function showResult() {
   hide('quiz-screen'); show('result-screen');
+  document.getElementById('retry-wrong-btn').style.display = 'block';
+  const wrongCount = results.filter(r => r.correct === false).length;
+  const retryBtn = document.getElementById('retry-wrong-btn');
+  if (wrongCount === 0) retryBtn.style.display = 'none';
+  else retryBtn.textContent = `まちがえた ${wrongCount} 問だけもう一度 →`;
   const judged = results.filter(r=>r.correct!==null);
   const sc = judged.filter(r=>r.correct).length;
   document.getElementById('result-score').textContent = sc+' / '+judged.length+' 問正解';
@@ -383,6 +389,14 @@ function showResult() {
   }).join('');
 }
 
+function retryWrong() {
+  const wrong = results.filter(r => r.correct === false).map(r => r.q);
+  if (wrong.length === 0) return;
+  shuffled = shuffle(wrong);
+  currentIndex = 0; score = 0; results = [];
+  hide('result-screen'); show('quiz-screen');
+  showQuestion();
+}
 function restartQuiz() { hide('result-screen'); startQuiz(); }
 function goHome() { hide('result-screen'); show('start-screen'); }
 
