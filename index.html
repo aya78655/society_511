@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5年社会 復習クイズ｜九州地方・日本の人口</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f9f8f5;
+    --surface: #ffffff;
+    --surface2: #f2f1ee;
+    --border: rgba(0,0,0,0.10);
+    --border2: rgba(0,0,0,0.18);
+    --text: #1a1a18;
+    --text2: #6b6b67;
+    --text3: #9b9b97;
+    --green-bg: #eaf3de;
+    --green-text: #27500a;
+    --green-border: #97c459;
+    --red-bg: #fcebeb;
+    --red-text: #791f1f;
+    --red-border: #f09595;
+    --accent: #1a1a18;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+  }
+
+  body {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 560px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .header .tag {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--text2);
+    border: 0.5px solid var(--border2);
+    border-radius: 20px;
+    padding: 4px 12px;
+    margin-bottom: 12px;
+  }
+
+  .header h1 {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+
+  .header p {
+    font-size: 14px;
+    color: var(--text2);
+  }
+
+  .card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .start-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+
+  .start-item {
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+  }
+
+  .start-item .label {
+    font-size: 11px;
+    color: var(--text3);
+    margin-bottom: 4px;
+  }
+
+  .start-item .value {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.25rem;
+  }
+
+  .progress-label {
+    font-size: 12px;
+    color: var(--text2);
+    white-space: nowrap;
+  }
+
+  .progress-bar-bg {
+    flex: 1;
+    height: 3px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+
+  .q-category {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+  }
+
+  .q-text {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--text);
+    white-space: pre-line;
+  }
+
+  .choices {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 1rem;
+  }
+
+  .choice-btn {
+    width: 100%;
+    padding: 13px 16px;
+    font-size: 14px;
+    font-family: inherit;
+    text-align: left;
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: var(--text);
+    transition: background 0.15s, border-color 0.15s;
+    line-height: 1.5;
+  }
+
+  .choice-btn:hover:not(:disabled) {
+    background: var(--surface2);
+    border-color: var(--accent);
+  }
+
+  .choice-btn:disabled { cursor: default; }
+
+  .choice-btn.correct {
+    background: var(--green-bg);
+    border-color: var(--green-border);
+    color: var(--green-text);
+  }
+
+  .choice-btn.wrong {
+    background: var(--red-bg);
+    border-color: var(--red-border);
+    color: var(--red-text);
+  }
+
+  .multi-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1.5;
+    transition: background 0.15s;
+  }
+
+  .multi-label:hover { background: var(--surface2); }
+
+  .multi-label input[type=checkbox] {
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  .note-box {
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 10px;
+  }
+
+  .answer-box {
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.25rem;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 10px;
+  }
+
+  .answer-box.correct {
+    background: var(--green-bg);
+    border: 0.5px solid var(--green-border);
+    color: var(--green-text);
+  }
+
+  .answer-box.wrong {
+    background: var(--red-bg);
+    border: 0.5px solid var(--red-border);
+    color: var(--red-text);
+  }
+
+  .answer-box.neutral {
+    background: var(--surface2);
+    border: 0.5px solid var(--border);
+    color: var(--text);
+  }
+
+  .answer-box .mark {
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 15px;
+  }
+
+  .answer-box .correct-ans {
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .answer-box .exp {
+    font-size: 13px;
+    opacity: 0.85;
+    white-space: pre-line;
+  }
+
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 500;
+    text-align: center;
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    color: var(--text);
+    transition: background 0.15s;
+  }
+
+  .btn:hover { background: var(--surface2); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  .btn-primary:hover { background: #333; }
+
+  .result-score {
+    font-size: 42px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    margin-bottom: 6px;
+    text-align: center;
+  }
+
+  .result-msg {
+    font-size: 15px;
+    color: var(--text2);
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .result-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .result-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 0.5px solid var(--border);
+    font-size: 13px;
+  }
+
+  .result-item .icon {
+    font-weight: 600;
+    min-width: 18px;
+    font-size: 14px;
+  }
+
+  .result-item .icon.ok { color: var(--green-text); }
+  .result-item .icon.ng { color: var(--red-text); }
+  .result-item .icon.memo { color: var(--text2); }
+
+  .result-item .detail { color: var(--text2); line-height: 1.5; }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="tag">5年社会 予習シリーズ 第11回</div>
+    <h1>まちがえた問題 復習クイズ</h1>
+    <p>全 <span id="total-count"></span> 問</p>
+  </div>
+
+  <!-- Start Screen -->
+  <div id="start-screen">
+    <div class="card">
+      <div class="start-grid">
+        <div class="start-item"><div class="label">大問1</div><div class="value">九州地方</div></div>
+        <div class="start-item"><div class="label">大問2</div><div class="value">九州の火山</div></div>
+        <div class="start-item"><div class="label">大問3</div><div class="value">日本の人口</div></div>
+      </div>
+      <button class="btn btn-primary" onclick="startQuiz()">クイズスタート →</button>
+    </div>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quiz-screen" class="hidden">
+    <div class="progress-wrap">
+      <div class="progress-label" id="q-label"></div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog"></div></div>
+      <div class="progress-label" id="q-counter"></div>
+    </div>
+
+    <div class="card">
+      <div class="q-category" id="q-category"></div>
+      <div class="q-text" id="q-text"></div>
+    </div>
+
+    <div id="choices-area" class="choices"></div>
+
+    <div id="answer-area" class="hidden">
+      <div id="answer-box" class="answer-box"></div>
+      <button class="btn" onclick="nextQuestion()">次の問題へ →</button>
+    </div>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="result-screen" class="hidden">
+    <div class="card">
+      <div class="result-score" id="result-score"></div>
+      <div class="result-msg" id="result-msg"></div>
+      <div class="result-list" id="result-detail"></div>
+      <button class="btn btn-primary" onclick="restartQuiz()">もう一度チャレンジ →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    category: "大問1・問1",
+    text: "沖縄の「□城」——世界文化遺産にも登録されているこのお城の名前（□に入る漢字）は？",
+    type: "choice",
+    choices: ["首里", "中城", "今帰仁", "座喜味"],
+    answer: "首里",
+    explanation: "首里城（しゅりじょう）が正解。琉球王国の城で、世界文化遺産に登録されています。"
+  },
+  {
+    category: "大問1・問1",
+    text: "福岡県で、筑紫平野に位置しゴム製品や繊維物が有名な市（人口3番目）はどこ？",
+    type: "choice",
+    choices: ["久留米市", "北九州市", "大牟田市", "飯塚市"],
+    answer: "久留米市",
+    explanation: "久留米市（くるめし）が正解。ブリヂストン発祥地としても有名で、ゴム製品の生産がさかんです。"
+  },
+  {
+    category: "大問1・問2",
+    text: "福岡県で「あまおう」という品種の栽培がさかんな農作物はどれ？",
+    type: "choice",
+    choices: ["いちご", "トマト", "みかん", "ぶどう"],
+    answer: "いちご",
+    explanation: "「あまおう」はいちごの品種です。福岡県は全国有数のいちごの産地です。"
+  },
+  {
+    category: "大問1・問4",
+    text: "沖縄では地下ダムや海水淡水化施設ができる前、降水量が多いのに水不足になりがちでした。その理由を25字以内で答えなさい。",
+    type: "text",
+    answer: "川が短く急なため、雨水がすぐ海に流れ出てしまうから。",
+    explanation: "沖縄の川は短くて急勾配。雨が降ってもすぐ海へ流れ出てしまい、水をためておくことができません。"
+  },
+  {
+    category: "大問1・問5",
+    text: "沖縄島の面積のうちアメリカ軍基地がしめる割合に最も近いものは？",
+    type: "choice",
+    choices: ["約8%", "約15%", "約30%", "約70%"],
+    answer: "約30%",
+    explanation: "沖縄島の約30%がアメリカ軍基地です。沖縄県全体では約15%ですが、島だけに限ると約30%です。"
+  },
+  {
+    category: "大問1・問7",
+    text: "北九州市の工業について、正しい文をすべて選びなさい。",
+    type: "multi",
+    choices: [
+      "ア：第二次世界大戦前は、近くでとれた石炭などを用いて鉄鋼を生産していた",
+      "イ：高度経済成長期には、四大公害病の1つに数えられる公害が発生した",
+      "ウ：工業地域の工業別生産額をみると、金属工業の割合が最も多い",
+      "エ：現在、エコタウン事業が進められ、持続可能な開発目標推進のモデル都市に選ばれている"
+    ],
+    answer: ["ア", "エ"],
+    explanation: "正解はア・エ。\nイ→×：四日市ぜんそくは三重県の公害。北九州の公害（洞海湾など）は四大公害病には含まれない。\nウ→×：現在の北九州工業地域は機械工業の割合が最も多い。"
+  },
+  {
+    category: "大問2・問1",
+    text: "雲仙岳（長崎県）がある半島の名前は？",
+    type: "choice",
+    choices: ["知多半島", "紀伊半島", "薩摩半島", "島原半島"],
+    answer: "島原半島",
+    explanation: "雲仙岳は長崎県の島原半島（しまばらはんとう）に位置します。1991年に大規模な噴火が起きました。"
+  },
+  {
+    category: "大問2・問3",
+    text: "福岡空港を利用した外国人（2023年）の半分以上は、どの国の人でしたか？",
+    type: "choice",
+    choices: ["オーストラリア", "韓国", "アメリカ", "イギリス"],
+    answer: "韓国",
+    explanation: "福岡は韓国に近く、釜山からフェリーでも来られる距離です。韓国からの訪問者が最も多いです。"
+  },
+  {
+    category: "大問2・問4",
+    text: "九州地方は「□」の生産がさかんで、「シリコンアイランド」とよばれてきました。□に入るものは？",
+    type: "choice",
+    choices: ["自動車", "陶磁器", "半導体", "プラスチック"],
+    answer: "半導体",
+    explanation: "九州地方は半導体（ICチップなど）の生産がさかんで、シリコンアイランドとよばれています。"
+  },
+  {
+    category: "大問2・問5②",
+    text: "長崎県と佐賀県を結ぶ□新幹線には「温泉」ということばがふくまれる駅が2つあります。□を漢字3字で答えなさい。",
+    type: "choice",
+    choices: ["西九州", "九州南", "肥前長崎", "西長崎"],
+    answer: "西九州",
+    explanation: "西九州（にしきゅうしゅう）新幹線。「武雄温泉」駅と「嬉野温泉」駅の2つに「温泉」が入っています。"
+  },
+  {
+    category: "大問2・問7②",
+    text: "鹿児島県の農業について、正しくないものはどれ？",
+    type: "choice",
+    choices: [
+      "ア：シラス台地では、茶の栽培がさかん",
+      "イ：茶の生産量は全国1・2位を争っている",
+      "ウ：ぶたの飼育数（2023年）は全国第1位",
+      "エ：さつまいもの生産量（2023年）は全国第1位"
+    ],
+    answer: "ウ：ぶたの飼育数（2023年）は全国第1位",
+    explanation: "ウが誤り。ぶたの飼育数は鹿児島県と宮崎県で上位争いをしており、2023年時点で「全国第1位」とは言い切れません。\nまたアは要注意：シラス台地は水はけがよい（水もちが悪い）が正しい表現です。"
+  },
+  {
+    category: "大問2・問8",
+    text: "鹿児島県のマークはどれ？（県の形と火山（桜島）を表している）",
+    type: "choice",
+    choices: ["ア（伊賀）", "イ（大分）", "ウ（沖縄）", "エ（鹿児島）"],
+    answer: "エ（鹿児島）",
+    explanation: "鹿児島県のマークはエ。県の形と桜島を組み合わせたデザインです。"
+  },
+  {
+    category: "大問2・問9",
+    text: "九州地方最高峰の宮之浦岳があり、世界自然遺産にも登録されている島はどれ？",
+    type: "choice",
+    choices: ["沖ノ島", "奄美大島", "屋久島", "西表島"],
+    answer: "屋久島",
+    explanation: "屋久島（やくしま）が正解。宮之浦岳（1936m）があり、1993年に世界自然遺産に登録されました。"
+  },
+  {
+    category: "大問3・問2",
+    text: "日本の総人口は世界何位？また、65歳以上の高齢者が人口にしめる割合は約何割？",
+    type: "choice",
+    choices: ["12位・2割", "12位・3割", "15位・2割", "15位・3割"],
+    answer: "12位・3割",
+    explanation: "日本の総人口は世界12位。65歳以上の高齢者の割合は約3割（B=65、C=3）です。"
+  },
+  {
+    category: "大問3・問3",
+    text: "次のI・IIの正誤の組み合わせは？\nI：沖縄では第一次産業人口の割合が3割をこえている\nII：高度経済成長期の1970年には、第二次産業が第三次産業の人数を上回っていた",
+    type: "choice",
+    choices: ["I＝正・II＝正", "I＝正・II＝誤", "I＝誤・II＝正", "I＝誤・II＝誤"],
+    answer: "I＝誤・II＝誤",
+    explanation: "I→誤：沖縄の第一次産業（農林水産）人口は3割をこえていない。観光など第三次産業が多い。\nII→誤：1970年時点ですでに第三次産業の方が多かった。"
+  },
+  {
+    category: "大問3・問6",
+    text: "三大都市圏（東京・大阪・名古屋の中心から半径50km以内）の人口が総人口にしめる割合は？",
+    type: "choice",
+    choices: ["約35%", "約50%", "約65%", "約80%"],
+    answer: "約50%",
+    explanation: "三大都市圏には、日本の総人口の約50%が集中しています。"
+  },
+  {
+    category: "大問3・問8②",
+    text: "沖縄県の石垣島の北北西に位置する、魚釣島などからなる島々を何といいますか？",
+    type: "choice",
+    choices: ["南西諸島", "尖閣諸島", "先島諸島", "八重山諸島"],
+    answer: "尖閣諸島",
+    explanation: "魚釣島などからなるのは尖閣諸島（せんかくしょとう）です。石垣島の北北西に位置します。"
+  }
+];
+
+let currentIndex = 0;
+let score = 0;
+let results = [];
+let shuffled = [];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function show(id) { document.getElementById(id).classList.remove('hidden'); }
+function hide(id) { document.getElementById(id).classList.add('hidden'); }
+
+function startQuiz() {
+  shuffled = shuffle(questions);
+  currentIndex = 0; score = 0; results = [];
+  hide('start-screen');
+  show('quiz-screen');
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = shuffled[currentIndex];
+  const total = shuffled.length;
+  document.getElementById('q-label').textContent = q.category;
+  document.getElementById('q-counter').textContent = (currentIndex + 1) + ' / ' + total;
+  document.getElementById('prog').style.width = (currentIndex / total * 100) + '%';
+  document.getElementById('q-category').textContent = q.category;
+  document.getElementById('q-text').textContent = q.text;
+  hide('answer-area');
+
+  const ca = document.getElementById('choices-area');
+  ca.innerHTML = '';
+  ca.style.display = 'flex';
+
+  if (q.type === 'text') {
+    const note = document.createElement('div');
+    note.className = 'note-box';
+    note.textContent = '記述問題です。自分で答えを考えてから「答えを見る」を押してください。';
+    ca.appendChild(note);
+    const btn = document.createElement('button');
+    btn.className = 'btn';
+    btn.textContent = '答えを見る';
+    btn.onclick = () => showAnswer(null, q);
+    ca.appendChild(btn);
+  } else if (q.type === 'multi') {
+    ca.style.flexDirection = 'column';
+    const note = document.createElement('div');
+    note.className = 'note-box';
+    note.textContent = '正しいものをすべて選んで「答えを見る」を押してください。';
+    ca.appendChild(note);
+    const keys = ['ア','イ','ウ','エ'];
+    q.choices.forEach((c, i) => {
+      const label = document.createElement('label');
+      label.className = 'multi-label';
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.value = keys[i];
+      label.appendChild(cb);
+      const span = document.createElement('span');
+      span.textContent = c;
+      label.appendChild(span);
+      ca.appendChild(label);
+    });
+    const btn = document.createElement('button');
+    btn.className = 'btn';
+    btn.textContent = '答えを見る';
+    btn.style.marginTop = '4px';
+    btn.onclick = () => {
+      const checked = [...ca.querySelectorAll('input:checked')].map(el => el.value).sort();
+      const correct = [...q.answer].sort();
+      showAnswer(JSON.stringify(checked) === JSON.stringify(correct), q);
+    };
+    ca.appendChild(btn);
+  } else {
+    ca.style.flexDirection = 'column';
+    q.choices.forEach(c => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.textContent = c;
+      btn.onclick = () => {
+        document.querySelectorAll('.choice-btn').forEach(b => {
+          b.disabled = true;
+          if (b.textContent === q.answer) b.classList.add('correct');
+          else if (b === btn && c !== q.answer) b.classList.add('wrong');
+        });
+        showAnswer(c === q.answer, q, c);
+      };
+      ca.appendChild(btn);
+    });
+  }
+}
+
+function showAnswer(isCorrect, q, chosen) {
+  show('answer-area');
+  const ab = document.getElementById('answer-box');
+  ab.className = 'answer-box';
+
+  const ca = document.getElementById('choices-area');
+  ca.querySelectorAll('button.choice-btn, button.btn:not(#answer-area button)').forEach(b => b.disabled = true);
+  ca.querySelectorAll('input').forEach(b => b.disabled = true);
+
+  const answerText = Array.isArray(q.answer) ? q.answer.join('・') : q.answer;
+
+  if (q.type === 'text') {
+    ab.classList.add('neutral');
+    ab.innerHTML = '<div class="mark">📝 模範解答</div><div class="correct-ans">' + q.answer + '</div><div class="exp">' + q.explanation + '</div>';
+    results.push({ q, correct: null });
+  } else {
+    if (isCorrect) { score++; ab.classList.add('correct'); }
+    else { ab.classList.add('wrong'); }
+    const mark = isCorrect ? '◯ 正解！' : '✕ 不正解';
+    ab.innerHTML = '<div class="mark">' + mark + '</div><div class="correct-ans">正解：' + answerText + '</div><div class="exp">' + q.explanation + '</div>';
+    results.push({ q, correct: isCorrect });
+  }
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= shuffled.length) showResult();
+  else showQuestion();
+}
+
+function showResult() {
+  hide('quiz-screen');
+  show('result-screen');
+
+  const judged = results.filter(r => r.correct !== null);
+  const total = judged.length;
+  const sc = judged.filter(r => r.correct).length;
+  document.getElementById('result-score').textContent = sc + ' / ' + total + ' 問正解';
+
+  const pct = total > 0 ? Math.round(sc / total * 100) : 0;
+  const msg = pct >= 80 ? '🎉 すばらしい！よく復習できています' : pct >= 50 ? 'もう少し！もう一度チャレンジしてみよう' : 'もう一度しっかり復習しよう！';
+  document.getElementById('result-msg').textContent = msg;
+
+  const rd = document.getElementById('result-detail');
+  rd.innerHTML = results.map(r => {
+    const icon = r.correct === null ? '📝' : r.correct ? '◯' : '✕';
+    const cls = r.correct === null ? 'memo' : r.correct ? 'ok' : 'ng';
+    return '<div class="result-item"><span class="icon ' + cls + '">' + icon + '</span><span class="detail">' + r.q.category + '：' + r.q.text.slice(0, 28) + '…</span></div>';
+  }).join('');
+}
+
+function restartQuiz() {
+  hide('result-screen');
+  show('start-screen');
+}
+
+document.getElementById('total-count').textContent = questions.length;
+</script>
+</body>
+</html>
